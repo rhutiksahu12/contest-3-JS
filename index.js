@@ -51,10 +51,9 @@ searchbtn.addEventListener('click', (e) => {
 
 const getImageOfTheDay = async () => {
     const selectedDate = dateInput.value
-    console.log(selectedDate)
+    // console.log(selectedDate)
     const data = await fetchData(selectedDate)
     saveSearch(data)
-    // addSearchToHistory();
     image.src = data.url
     imgTitle.innerText = data.title
     imgDesc.innerText = data.explanation
@@ -68,28 +67,39 @@ const saveSearch = (data) => {
     const history = historyArray ? JSON.parse(historyArray) : []
     // console.log(history)
     // const newItem = data;
-    history.unshift(data)
+    data?history.unshift(data):null
     // console.log(history)
 
     const updatedHistory = JSON.stringify(history)
 
     localStorage.setItem('list', updatedHistory)
-   
+
+    addSearchToHistory()
+
 }
 
 const addSearchToHistory = async () => {
     const history = await JSON.parse(localStorage.getItem('list'));
     // const history = JSON.parse(list)
+    // history.forEach(element => {
+    //     const newItem = document.createElement('li')
+    //     const anchor = document.createElement('a')
+    //     anchor.innerText = element.date;
+    //     anchor.href='#'
+    //     anchor.addEventListener('click',()=> getImageOfTheDay(element.date))
+    //     newItem.appendChild(anchor)
+    //     // newItem.innerText = element.date;
+    //     historyList.append(newItem)
+    // });
+    // const historyL = JSON.parse(history)
+
     history.forEach(element => {
         const newItem = document.createElement('li')
-        const anchor = document.createElement('a')
-        anchor.innerText = element.date;
-        anchor.href = getImageOfTheDay(element.date)
-        newItem.appendChild(anchor)
-        // newItem.innerText = element.date;
+        newItem.innerText=element.date;
         historyList.append(newItem)
+        newItem.addEventListener('click', ()=> getImageOfTheDay(element.date))
+
     });
-    // const historyL = JSON.parse(history)
     console.log(history, "history")
 }
 
@@ -97,6 +107,6 @@ const addSearchToHistory = async () => {
 
 window.onload = function () {
     getCurrentImageOfTheDay()
-    // addSearchToHistory();
-   
+    addSearchToHistory();
+
 }
